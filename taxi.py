@@ -33,10 +33,10 @@ n_actions = env.action_space.n  # type: ignore
 #################################################
 # 1. Play with QLearningAgent
 #################################################
-
+env = gym.wrappers.RecordVideo(env, "videos/QLearningAgent",episode_trigger=lambda ep: ep % 100 == 0)
 # You can edit these hyperparameters!
 agent = QLearningAgent(
-    learning_rate=0.5, epsilon=0.25, gamma=0.99, legal_actions=list(range(n_actions))
+    learning_rate=0.5, epsilon=0.1, gamma=0.99, legal_actions=list(range(n_actions))
 )
 
 
@@ -58,6 +58,16 @@ def play_and_train(env: gym.Env, agent: QLearningAgent, t_max=int(1e4)) -> float
 
         # Train agent for state s
         # BEGIN SOLUTION
+        #  print(r)
+        total_reward += r
+ 
+        agent.update(s, a, r, next_s)
+        s = next_s
+        if done:
+            break
+      
+
+
         # END SOLUTION
 
     return total_reward
@@ -71,10 +81,14 @@ for i in range(1000):
 
 assert np.mean(rewards[-100:]) > 0.0
 # TODO: créer des vidéos de l'agent en action
+env.close()
 
 #################################################
 # 2. Play with QLearningAgentEpsScheduling
 #################################################
+env = gym.make("Taxi-v3", render_mode="rgb_array")
+env = gym.wrappers.RecordVideo(env, "videos/QLearningAgentEpsScheduling",episode_trigger=lambda ep: ep % 100 == 0)
+
 
 
 agent = QLearningAgentEpsScheduling(
@@ -90,11 +104,13 @@ for i in range(1000):
 assert np.mean(rewards[-100:]) > 0.0
 
 # TODO: créer des vidéos de l'agent en action
-
+env.close()
 
 ####################
 # 3. Play with SARSA
 ####################
+env = gym.make("Taxi-v3", render_mode="rgb_array")
+env = gym.wrappers.RecordVideo(env, "videos/SARSA",episode_trigger=lambda ep: ep % 100 == 0)
 
 
 agent = SARSAAgent(learning_rate=0.5, gamma=0.99, legal_actions=list(range(n_actions)))
@@ -104,3 +120,4 @@ for i in range(1000):
     rewards.append(play_and_train(env, agent))
     if i % 100 == 0:
         print("mean reward", np.mean(rewards[-100:]))
+env.close()

@@ -11,7 +11,7 @@ Info = t.TypedDict("Info", {"prob": float, "action_mask": np.ndarray})
 QValues = t.DefaultDict[int, t.DefaultDict[Action, float]]
 
 
-class SarsaAgent:
+class SARSAAgent:
     def __init__(
         self,
         learning_rate: float,
@@ -47,6 +47,7 @@ class SarsaAgent:
         """
         value = 0.0
         # BEGIN SOLUTION
+        value = max(self.get_qvalue(state, action) for action in self.legal_actions)
         # END SOLUTION
         return value
 
@@ -61,6 +62,17 @@ class SarsaAgent:
         """
         q_value = 0.0
         # BEGIN SOLUTION
+        next_action = self.get_action(next_state)
+
+        q_old_next = self.get_qvalue(next_state, next_action)
+
+        td_target = reward + self.gamma * q_old_next
+
+        q_old = self.get_qvalue(state, action)
+
+        td_error = td_target - q_old
+
+        q_value = q_old + self.learning_rate * td_error
         # END SOLUTION
 
         self.set_qvalue(state, action, q_value)
@@ -83,6 +95,10 @@ class SarsaAgent:
         action = self.legal_actions[0]
 
         # BEGIN SOLUTION
+        if random.random() <  0.003:
+            action = random.choice(self.legal_actions)
+        else:
+            action = self.get_best_action(state)
         # END SOLUTION
 
         return action
