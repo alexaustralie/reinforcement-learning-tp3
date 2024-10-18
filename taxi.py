@@ -24,11 +24,25 @@ import numpy as np
 from qlearning import QLearningAgent
 from qlearning_eps_scheduling import QLearningAgentEpsScheduling
 from sarsa import SARSAAgent
-
+import matplotlib.pyplot as plt
 
 env = gym.make("Taxi-v3", render_mode="rgb_array")
 n_actions = env.action_space.n  # type: ignore
 
+
+def plot_rewards(rewards: list, title: str, filename: str) -> None:
+    """
+    Function to plot the evolution of rewards over episodes.
+    """
+    plt.figure(figsize=(10, 5))
+    plt.plot(rewards, label='Total Reward')
+    plt.xlabel('Episodes')
+    plt.ylabel('Total Reward')
+    plt.title(title)
+    plt.grid()
+    plt.legend()
+    plt.savefig(filename)
+    plt.show()
 
 #################################################
 # 1. Play with QLearningAgent
@@ -58,16 +72,11 @@ def play_and_train(env: gym.Env, agent: QLearningAgent, t_max=int(1e4)) -> float
 
         # Train agent for state s
         # BEGIN SOLUTION
-        #  print(r)
         total_reward += r
- 
         agent.update(s, a, r, next_s)
         s = next_s
         if done:
             break
-      
-
-
         # END SOLUTION
 
     return total_reward
@@ -80,8 +89,11 @@ for i in range(1000):
         print("mean reward", np.mean(rewards[-100:]))
 
 assert np.mean(rewards[-100:]) > 0.0
+
+
 # TODO: créer des vidéos de l'agent en action
 env.close()
+plot_rewards(rewards, 'QLearning Agent - Evolution of Rewards', 'QLearningAgent_rewards.png')
 
 #################################################
 # 2. Play with QLearningAgentEpsScheduling
@@ -103,8 +115,10 @@ for i in range(1000):
 
 assert np.mean(rewards[-100:]) > 0.0
 
+
 # TODO: créer des vidéos de l'agent en action
 env.close()
+plot_rewards(rewards, 'QLearning Agent with Epsilon Scheduling - Evolution of Rewards', 'QLearningAgentEpsScheduling_rewards.png')
 
 ####################
 # 3. Play with SARSA
@@ -121,3 +135,6 @@ for i in range(1000):
     if i % 100 == 0:
         print("mean reward", np.mean(rewards[-100:]))
 env.close()
+
+
+plot_rewards(rewards, 'SARSA Agent - Evolution of Rewards', 'SARSAAgent_rewards.png')
