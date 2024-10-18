@@ -86,14 +86,16 @@ rewards = []
 for i in range(1000):
     rewards.append(play_and_train(env, agent))
     if i % 100 == 0:
-        print("mean reward", np.mean(rewards[-100:]))
+        print("mean reward QLearningAgent epoch", i, ":", np.mean(rewards[-100:]))
 
 assert np.mean(rewards[-100:]) > 0.0
 
 
 # TODO: créer des vidéos de l'agent en action
 env.close()
-plot_rewards(rewards, 'QLearning Agent - Evolution of Rewards', 'QLearningAgent_rewards.png')
+
+#Décomenter pour afficher le graphique
+#plot_rewards(rewards, 'QLearning Agent - Evolution of Rewards', 'QLearningAgent_rewards.png')
 
 #################################################
 # 2. Play with QLearningAgentEpsScheduling
@@ -111,14 +113,16 @@ rewards = []
 for i in range(1000):
     rewards.append(play_and_train(env, agent))
     if i % 100 == 0:
-        print("mean reward", np.mean(rewards[-100:]))
+        print("mean reward QLearningAgentEpsScheduling epoch", i, ":", np.mean(rewards[-100:]))
 
 assert np.mean(rewards[-100:]) > 0.0
 
 
 # TODO: créer des vidéos de l'agent en action
 env.close()
-plot_rewards(rewards, 'QLearning Agent with Epsilon Scheduling - Evolution of Rewards', 'QLearningAgentEpsScheduling_rewards.png')
+
+#Décomenter pour afficher le graphique
+#plot_rewards(rewards, 'QLearning Agent with Epsilon Scheduling - Evolution of Rewards', 'QLearningAgentEpsScheduling_rewards.png')
 
 ####################
 # 3. Play with SARSA
@@ -133,8 +137,8 @@ rewards = []
 for i in range(1000):
     rewards.append(play_and_train(env, agent))
     if i % 100 == 0:
-        print("mean reward", np.mean(rewards[-100:]))
+        print("mean reward SARSA epoch", i, ":", np.mean(rewards[-100:]))
 env.close()
 
-
-plot_rewards(rewards, 'SARSA Agent - Evolution of Rewards', 'SARSAAgent_rewards.png')
+#Décomenter pour afficher le graphique
+#plot_rewards(rewards, 'SARSA Agent - Evolution of Rewards', 'SARSAAgent_rewards.png')
